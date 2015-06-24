@@ -1,0 +1,11 @@
+{
+  "name": "public",
+  "version": "0.0.0",
+  "authors": [
+    "amhester <amhester@anderson.edu>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "angular-material": "~0.10.0"
+  }
+}
