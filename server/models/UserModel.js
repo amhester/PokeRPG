@@ -7,10 +7,9 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
-    admin: Boolean,
     createdDate: Date,
-    updatedDate: Date
-    //other stuff here
+    updatedDate: Date,
+    LastOnline: Date
 });
 
 userSchema.pre('save', function (next) {
