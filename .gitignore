@@ -3070,3 +3070,5 @@ public/bower_components/angular-material/modules/js/whiteframe/whiteframe.min.cs
 public/bower_components/angular-material/modules/js/whiteframe/whiteframe.min.js
 public/bower_components/angular-material/package.json
 public/bower_components/angular-material/README.md
+public/bower_components/angular-loader/angular-loader.min.js
+public/bower_components/angular-route/angular-route.min.js
