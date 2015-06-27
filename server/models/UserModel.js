@@ -3,6 +3,7 @@
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var passHash = require('password-hash');
 
 var userSchema = new Schema({
     email: { type: String, required: true, unique: true },
@@ -17,6 +18,12 @@ userSchema.pre('save', function (next) {
 
     next();
 });
+
+userSchema.statics.authenticate = function (email, password, cb) {
+    var foundPass = this.findOne({ email: email }, 'password', function (err, pass) {
+
+    });
+};
 
 var User = mongoose.model('User', userSchema);
 
