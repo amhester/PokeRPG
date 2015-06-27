@@ -1,7 +1,7 @@
 {
-  "name": "PokeRPG",
+  "name": "pokerpg",
   "version": "1.0.0",
-  "description": "",
+  "description": "A new pokemon rpg-like game. For kicks/gigs and practice.\r Need to run npm and bower for dependencies.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,5 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "socket.io": "^1.3.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amhester/PokeRPG.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amhester/PokeRPG/issues"
+  },
+  "homepage": "https://github.com/amhester/PokeRPG#readme"
 }

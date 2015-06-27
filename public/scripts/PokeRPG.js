@@ -18,6 +18,11 @@
                 controller: 'signInController',
                 controllerAs: 'vm'
             })
+            .when('/start', {
+                templateUrl: '../views/starterSelect.html',
+                controller: 'starterSelectController',
+                controllerAs: 'vm'
+            })
             .otherwise("/");
     }
 })();
