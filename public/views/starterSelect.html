@@ -1,0 +1,30 @@
+<div layout="row">
+    <md-card flex="20">
+        <md-card-content>
+            <h2 class="md-title">Starter Pokemon</h2>
+            <md-list>
+                <md-list-item class="md-2-line" ng-click="vm.test($event, poke.pokeName)" ng-repeat="poke in vm.Pokemon">
+                    <img ng-src="http://placehold.it/40x40" class="md-avatar" alt="{{poke.pokeName}}" />
+                    <div class="md-list-item-text">
+                        <h3>{{poke.pokeName}}</h3>
+                        <p>{{poke.pokeType}}</p>
+                    </div>
+                    <md-divider ng-if="!$last"></md-divider>
+                </md-list-item>
+            </md-list>
+        </md-card-content>
+    </md-card>
+
+    <img ng-src="http://placehold.it/700x550" />
+
+    <div flex>
+        <h2>Pokemon Base Stats:</h2>
+        <md-list>
+            <md-list-item ng-repeat="stat in vm.PokemonStats">
+                <h3>{{stat}}: 25</h3>
+            </md-list-item>
+        </md-list>
+    </div>
+
+</div>
+
