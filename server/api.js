@@ -105,7 +105,7 @@ server.post(userPath, function (req, res, err) {
         if(err) {
             console.error(err);
             res.send(500, 'Error creating user.\\n' + err);
-    }
+        }
         res.send(200, 'User successfully created.');
     });
 });

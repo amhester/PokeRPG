@@ -8,10 +8,11 @@
 
     angular
         .module('PokeRPG', ['ngRoute', 'ngMaterial'])
+        .value('apiUrl', '')
         .config(config);
 
-    config.$inject = ['$routeProvider'];
-    function config(routeProvider) {
+    config.$inject = ['$routeProvider', '$httpProvider'];
+    function config(routeProvider, httpProvider) {
         routeProvider
             .when('/', {
                 templateUrl: '../views/signin.html',
@@ -24,5 +25,7 @@
                 controllerAs: 'vm'
             })
             .otherwise("/");
+
+        httpProvider.interceptors.push('authInjector');
     }
 })();
