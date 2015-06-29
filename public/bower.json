@@ -6,7 +6,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "angular-material": "~0.10.0"
+    "angular-material": "~0.10.0",
+    "angular-local-storage": "~0.2.2"
   },
   "ignore": [
     "**/.*",
