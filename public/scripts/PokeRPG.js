@@ -7,7 +7,7 @@
     'use strict';
 
     angular
-        .module('PokeRPG', ['ngRoute', 'ngMaterial'])
+        .module('PokeRPG', ['ngRoute', 'ngMaterial', 'ngMessages', 'validation.match', 'LocalStorageModule'])
         .value('apiUrl', '')
         .config(config);
 
@@ -15,13 +15,18 @@
     function config(routeProvider, httpProvider) {
         routeProvider
             .when('/', {
-                templateUrl: '../views/signin.html',
+                templateUrl: 'views/signin.html',
                 controller: 'signInController',
                 controllerAs: 'vm'
             })
-            .when('/start', {
-                templateUrl: '../views/starterSelect.html',
+            .when('/starterselect', {
+                templateUrl: 'views/starterSelect.html',
                 controller: 'starterSelectController',
+                controllerAs: 'vm'
+            })
+            .when('/register', {
+                templateUrl: 'views/register.html',
+                controller: 'registerController',
                 controllerAs: 'vm'
             })
             .otherwise("/");

@@ -52,7 +52,7 @@ var server = restify.createServer({
 //Global restify server event handling
 server.on('uncaughtException', function (request, response, route, error) {
     console.error(error);
-    res.send(500, 'Unknown Server Exception.');
+    response.send(500, 'Unknown Server Exception.');
 });
 
 //Generic handlers for any incoming request (careful, executed in order!)

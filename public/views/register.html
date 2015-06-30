@@ -1,0 +1,43 @@
+<div layout="row" style="margin-top: 100px;"></div>
+<div layout="row" layout-align="center center">
+    <md-content>
+        <md-card id="registerCard">
+            <form name="registerForm">
+                <md-card-content>
+                    <h2 class="md-title">Register</h2>
+                    <div layout="column">
+                        <md-input-container>
+                            <label for="registerEmail">Email</label>
+                            <input id="registerEmail" name="registerEmail" required type="email" ng-model="vm.email" ng-pattern="/^[a-zA-Z0-9\+]@[a-zA-Z0-9]\.com|org|edu|net$/" />
+                            <div ng-messages="registerForm.registerEmail.$error">
+                                <div ng-message="required">This is required.</div>
+                                <div ng-message="pattern">Invalid email.</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <label for="registerPassword">Password</label>
+                            <input id="registerPassword" name="registerPassword" md-maxLength="30" minLength="8" required type="password" ng-model="vm.password" />
+                            <div ng-messages="registerForm.registerPassword.$error">
+                                <div ng-message="required">This is required.</div>
+                                <div ng-message="md-maxLength">Password must be fewer than 30 characters.</div>
+                                <div ng-message="minLength">Password must be at least 8 characters.</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input id="confirmPassword" name="confirmPassword" type="password" ng-model="vm.confirmPassword" required match="vm.password" />
+                            <div ng-messages="registerForm.confirmPassword.$error">
+                                <div ng-message="required">This is required.</div>
+                                <div ng-message="match">Passwords must match.</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                </md-card-content>
+                <div class="md-actions" layout="row" layout-align="center center">
+                    <md-button ng-disabled="registerForm.$error">Submit</md-button>
+                    <md-button>Cancel</md-button>
+                </div>
+            </form>
+        </md-card>
+    </md-content>
+</div>

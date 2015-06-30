@@ -5,8 +5,9 @@
     'use strict';
 
     angular
-        .module('PokeRGP')
-        .factory('authInjector', authInjector);
+        .module('PokeRPG')
+        .factory('authInjector', authInjector)
+        .factory('authService', authService);
 
     authInjector.$inject = ['$rootScope', 'localStorageService'];
     function authInjector(rootScope, ls) {
@@ -25,7 +26,8 @@
     function authService(rootScope, http, apiUrl, q, ls) {
         return {
             signIn: authenticate,
-            signOut: function (){}
+            signOut: signOut,
+            register: register
         };
 
         function authenticate(email, password) {
@@ -40,6 +42,14 @@
                         deferred.reject(msg);
                     });
             return deferred;
+        }
+
+        function signOut() {
+
+        }
+
+        function register() {
+
         }
     }
 })();
