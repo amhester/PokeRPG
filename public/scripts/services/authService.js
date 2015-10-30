@@ -13,6 +13,7 @@
     function authInjector(rootScope, ls) {
         var authInject = {
             request: function (config) {
+                config.headers["Access-Control-Allow-Origin"] = "*";
                 if(ls.get('badAssToken')) {
                     config.headers['Authorization'] = 'Basic ' + ls.get('badAssToken');
                 }
@@ -33,7 +34,7 @@
         function authenticate(email, password) {
             var deferred = q.defer();
                 http
-                    .post(apiUrl, { email: email, password: password })
+                    .get(apiUrl + '/token', { email: email, password: password })
                     .success(function (data) {
                         ls.set('badAssToken', data);
                         deferred.resolve(data);
@@ -48,8 +49,18 @@
 
         }
 
-        function register() {
-
+        function register(email, password) {
+            var deferred = q.defer();
+            http
+                .post(apiUrl + '/user', { email: email, password: password })
+                .success(function (data) {
+                    deferred.resolve(data);
+                })
+                .error(function (msg, code) {
+                    console.error('Error ' + code + '\nMessage: \n' + msg);
+                    deferred.reject(msg);
+                });
+            return deferred;
         }
     }
 })();

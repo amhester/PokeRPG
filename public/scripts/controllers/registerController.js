@@ -9,7 +9,19 @@
         .controller('registerController', registerController);
 
     registerController.$inject = ['$scope', '$rootScope', 'authService'];
-    function registerController() {
+    function registerController(scope, rootScope, authService) {
         var vm = this;
+
+        vm.register = register;
+
+        function register() {
+            authService
+                .register(vm.email, vm.password)
+                .then(function (data) {
+                    console.log(data);
+                }, function (error) {
+
+                });
+        }
     }
 })();

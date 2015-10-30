@@ -2,44 +2,49 @@
  * Created by amhes_000 on 6/24/2015.
  */
 var restify = require('restify');
+var chalk = require('chalk');
 var db = require('mongoose');
 db.connect('mongodb://localhost/PokeRPG');
 var passHash = require('password-hash');
 var User = require('../server/models/UserModel');
+var jwt = require('jsonwebtoken');
+var appConfig = require('../app.config.json');
 
 /* ----------------  Stuff to be refactored out at some point  ----------------- */
-//Some convienance methods
-function authStoreHasToken(token) {
-    for(var i =  0; i < authTokenStore.length; i++) {
-        if(authTokenStore[i].token == token) {
-            return true;
-        }
-    }
-    return false;
-}
 
-//Used to store an object with token and userId for all currently signed in users (e.g. { token: 345=Gd2!d, id: 45 })
-var authTokenStore = [];
 
 //Custom authentication check for requests
 function authenticateRequest(req, res, next) {
     var authHeader = req.header('Authorization');
     var authHeaderToken = authHeader && authHeader.split(' ').length > 1 ? authHeader.split(' ')[1] : '';
-    console.log('current auth header' + authHeader);
-    console.log('current auth token, if it exists: ' + authHeaderToken);
-    console.log('tokenStore has token? ' + authStoreHasToken(authHeaderToken));
-    if(authHeader && authStoreHasToken(authHeaderToken)) {
-        console.log('authorized request');
-        next();
-    } else if (req.url == '/token') {
+    if (req.url == '/token') {
         console.log('not authorized, seeking authentication');
         next();
     } else if (req.method == 'POST' && req.url == '/user') {
         console.log('not authorized, creating a user.');
         next();
+    } else if (authHeader) {
+        jwt.verify(authHeaderToken, appConfig.appSecret, function (err, payload) {
+            if(err) {
+                console.log('Unauthorized Access.');
+                res.send(403, "Unauthorized Access.");
+            } else {
+                req.authContext = payload;
+                console.log('authorized request');
+                next();
+            }
+        });
     } else {
+        console.log('Unauthorized Access.');
         res.send(403, "Unauthorized Access.");
     }
+}
+
+function enableCors(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+    next();
 }
 
 /* ---------------------------------------------------------------------------- */
@@ -56,9 +61,10 @@ server.on('uncaughtException', function (request, response, route, error) {
 });
 
 //Generic handlers for any incoming request (careful, executed in order!)
+server.use(enableCors);
 server.use(restify.acceptParser(server.acceptable));
 server.use(authenticateRequest);
-server.use(restify.CORS());
+//server.use(restify.CORS());
 server.use(restify.dateParser());
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
@@ -67,12 +73,12 @@ server.use(restify.bodyParser());
 //Token route for authentication
 server.post('/token', function (req,res, err) {
     console.log('Looking for a token...');
+    console.log('email: ' + req.params.email + '; password: ' + req.params.password);
     User.authenticate(req.params.email, req.params.password, function (results) {
         if(results.ok) {
-            var token = new Buffer(Math.floor((Math.random() * 100000000) + 1000).toString() + results.user._id.toString()).toString('base64');
-            authTokenStore.push({ token: token, id: results.user._id });
+            var token = jwt.sign({user: results.user}, appConfig.appSecret, {});
             res.send(200, {token: token});
-            console.log(authTokenStore);
+            console.log(token);
         } else {
             res.send(400, "Bad Request");
         }
@@ -82,15 +88,33 @@ server.post('/token', function (req,res, err) {
 //Account user routes
 var userPath = '/user';
 server.get(userPath, function (req, res, err) {
-    res.send(200, 'dummy path');
+    User.find({}, 'email', function (error, docs) {
+        if(error) {
+            res.send(400, 'No users found');
+        } else {
+            res.send(200, docs);
+        }
+    });
 });
 
 server.get(userPath + '/:id', function (req, res, err) {
-
+    User.findById(req.params.id, 'email', function (error, doc) {
+        if(error) {
+            res.send(400, 'Bad Request.');
+        } else {
+            res.send(200, doc);
+        }
+    });
 });
 
 server.put(userPath + '/:id', function (req, res, err) {
-
+    User.findOneAndUpdate({ _id: req.params.id }, { email: req.params.email }, function (error, doc) {
+        if(error) {
+            res.send(400, 'Bad Request.');
+        } else {
+            res.send(200, doc);
+        }
+    });
 });
 
 server.post(userPath, function (req, res, err) {
@@ -101,20 +125,30 @@ server.post(userPath, function (req, res, err) {
         password: req.params.password
     });
 
-    newUser.save(function (err) {
-        if(err) {
-            console.error(err);
-            res.send(500, 'Error creating user.\\n' + err);
+    newUser.save(function (error) {
+        if(error) {
+            console.error(error);
+            res.send(500, 'Error creating user.\\n' + error);
         }
         res.send(200, 'User successfully created.');
     });
 });
 
-server.del(userPath + ':id', function (req, res, err) {
+server.del(userPath + '/:id', function (req, res, err) {
+    User.remove({ _id: req.params.id}, function (error) {
+        if(error) {
+            res.send(400, 'Bad Request.');
+        } else {
+            res.send(200, 'User Successfully Deleted.');
+        }
+    });
+});
 
+process.on('exit', function () {
+    db.connection.close();
 });
 
 //Start server listening...
 server.listen(8090, '127.0.0.1', function () {
-    console.log('api running, listening on 127.0.0.1:8090');
+    console.log(chalk.green('api running, listening on 127.0.0.1:8090'));
 });

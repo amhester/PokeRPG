@@ -29,14 +29,20 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.statics.authenticate = function (email, password, cb) {
+    console.log('authenticating in User Repo...');
     this.findOne({ email: email }, function (err, user) {
+        console.log('Found a possible match...');
         if(user) {
+            console.log('verifying password...');
             if(passHash.verify(password, user.password)) {
+                console.log('password verified.');
                 cb({ ok: true, message: "Valid user credentials.", user: user });
             } else {
+                console.log('Invalid password.');
                 cb({ ok: false, message: "Invalid password!" });
             }
         } else {
+            console.log('No matching user found.');
             cb({ ok: false, message: "No User with that email found." });
         }
     });

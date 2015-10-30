@@ -7,8 +7,14 @@
     'use strict';
 
     angular
-        .module('PokeRPG', ['ngRoute', 'ngMaterial', 'ngMessages', 'validation.match', 'LocalStorageModule'])
-        .value('apiUrl', '')
+        .module('PokeRPG', [
+            'ngRoute',
+            'ngMaterial',
+            'ngMessages',
+            'validation.match',
+            'LocalStorageModule'
+        ])
+        .value('apiUrl', 'http://127.0.0.1/8090')
         .config(config);
 
     config.$inject = ['$routeProvider', '$httpProvider'];
@@ -19,6 +25,11 @@
                 controller: 'signInController',
                 controllerAs: 'vm'
             })
+            .when('/trainerselect', {
+                templateUrl: 'views/trainerCreate.html',
+                controller: 'trainerCreateController',
+                controllerAs: 'vm'
+            })
             .when('/starterselect', {
                 templateUrl: 'views/starterSelect.html',
                 controller: 'starterSelectController',
@@ -27,6 +38,11 @@
             .when('/register', {
                 templateUrl: 'views/register.html',
                 controller: 'registerController',
+                controllerAs: 'vm'
+            })
+            .when('/game', {
+                templateUrl: 'views/game.html',
+                controller: 'gameController',
                 controllerAs: 'vm'
             })
             .otherwise("/");
